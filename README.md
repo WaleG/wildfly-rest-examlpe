@@ -41,22 +41,6 @@ To run postman tests make sure that application is running and then execute:
 newman run src\main\resources\postman\Wildfly-rest.postman_collection.json
 ```
 
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
 ## Further steps
 
 * Swagger forced to override getClasses() method of Application class to implicitly set resources. I guess, more proper way can be found
