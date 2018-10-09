@@ -46,4 +46,4 @@ newman run src\main\resources\postman\Wildfly-rest.postman_collection.json
 * Swagger forced to override getClasses() method of Application class to implicitly set resources. I guess, more proper way can be found
 * Write some integration tests using Arquillian
 * Increase number of unit tests
-
+* I used resteasy @provider to handle exceptions, so to use exceptions in tests RESTEasy Server-side Mock Framework should be used in future
