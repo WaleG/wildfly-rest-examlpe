@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet author="Valentyn.Moliakov" id="1">
+        <createTable tableName="Project">
+            <column autoIncrement="true" name="projectId" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="ProjectPK"/>
+            </column>
+            <column name="endDate" type="timestamp"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="startDate" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Valentyn.Moliakov" id="2">
+        <createTable tableName="User">
+            <column autoIncrement="true" name="userId" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="UserPK"/>
+            </column>
+            <column name="dateOfBirth" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="firstname" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="projectId" type="BIGINT"/>
+            <column name="status" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="surname" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Valentyn.Moliakov" id="3">
+        <addUniqueConstraint columnNames="name" tableName="Project"/>
+    </changeSet>
+    <changeSet author="Valentyn.Moliakov" id="4">
+        <addUniqueConstraint columnNames="firstname, surname, dateOfBirth" tableName="User"/>
+    </changeSet>
+    <changeSet author="Valentyn.Moliakov" id="5">
+        <addForeignKeyConstraint baseColumnNames="projectId" baseTableName="User"
+                                 constraintName="FK_7g489utnx8usu8aqlabp5gdly" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="projectId"
+                                 referencedTableName="Project"/>
+    </changeSet>
+    <changeSet id="6" author="Valentyn.Moliakov">
+        <insert tableName="Project">
+            <column name="projectId" autoIncrement="true"/>
+            <column name="version" value="0"/>
+            <column name="name" value="ProjectOne"/>
+            <column name="startDate" value="2017-12-23 9:00:09.15"/>
+        </insert>
+        <insert tableName="Project">
+            <column name="projectId" autoIncrement="true"/>
+            <column name="version" value="0"/>
+            <column name="name" value="ProjectTwo"/>
+            <column name="startDate" value="2018-05-17 12:45:51.01"/>
+        </insert>
+    </changeSet>
+    <changeSet id="7" author="Valentyn.Moliakov">
+        <insert tableName="User">
+            <column name="userId" autoIncrement="true"/>
+            <column name="version" value="0"/>
+            <column name="firstname" value="Alex"/>
+            <column name="surname" value="Morgan"/>
+            <column name="dateOfBirth" value="1996-06-28"/>
+            <column name="status" value="ACTIVE"/>
+        </insert>
+        <insert tableName="User">
+            <column name="userId" autoIncrement="true"/>
+            <column name="version" value="0"/>
+            <column name="firstname" value="Petter"/>
+            <column name="surname" value="North"/>
+            <column name="dateOfBirth" value="1980-06-05"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="projectId" value="1"/>
+        </insert>
+        <insert tableName="User">
+            <column name="userId" autoIncrement="true"/>
+            <column name="version" value="0"/>
+            <column name="firstname" value="John"/>
+            <column name="surname" value="Dummy"/>
+            <column name="dateOfBirth" value="1993-04-10"/>
+            <column name="status" value="INACTIVE"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
