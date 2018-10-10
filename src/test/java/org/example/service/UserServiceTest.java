@@ -1,27 +1,27 @@
 package org.example.service;
 
+import org.example.MockitoExtension;
 import org.example.dao.UserDao;
 import org.example.model.User;
 import org.example.model.UserStatus;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
+import javax.ws.rs.WebApplicationException;
 import java.time.LocalDate;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
  * @author Valentyn.Moliakov
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
     @Mock
@@ -30,7 +30,7 @@ public class UserServiceTest {
     @InjectMocks
     private UserService userService = new UserService();
 
-    @Before
+    @BeforeEach
     public void setUp() {
         User user = createDummyUser();
 
@@ -39,9 +39,13 @@ public class UserServiceTest {
         when(userDao.findById(1L)).thenReturn(user);
     }
 
-    @Test(expected = RuntimeException.class)
-    public void whenUserNotFoundThenThrowException() {
-        userService.findById(101L);
+    @Test
+    public void whenUserNotFoundThenThrowException() throws WebApplicationException{
+        assertThrows(WebApplicationException.class,
+                () -> {
+                    userService.findById(101L);
+                }
+        );
     }
 
     @Test
@@ -62,11 +66,14 @@ public class UserServiceTest {
         assertTrue(userUpdatedCaptor.getValue().equals(user));
     }
 
-    @Test(expected = RuntimeException.class)
-    public void whenUserUpdatedByAnotherUserIdThenFail() {
-        User user = createDummyUser2();
-
-        userService.update(1L, user);
+    @Test
+    public void whenUserUpdatedByAnotherUserIdThenFail() throws WebApplicationException{
+        assertThrows(WebApplicationException.class,
+                () -> {
+                    User user = createDummyUser2();
+                    userService.update(1L, user);
+                }
+        );
     }
 
     private User createDummyUser() {

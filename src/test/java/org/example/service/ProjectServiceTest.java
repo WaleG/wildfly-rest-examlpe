@@ -1,28 +1,29 @@
 package org.example.service;
 
+import org.example.MockitoExtension;
 import org.example.dao.ProjectDao;
 import org.example.model.Project;
 import org.example.model.User;
 import org.example.model.UserStatus;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
+import javax.ws.rs.WebApplicationException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
  * @author Valentyn.Moliakov
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ProjectServiceTest {
 
     @Mock
@@ -34,8 +35,9 @@ public class ProjectServiceTest {
     @InjectMocks
     private ProjectService projectService = new ProjectService();
 
-    @Before
+    @BeforeEach
     public void setUp() {
+        //Setting up users and projects
         User user = createDummyUser();
 
         when(projectDao.findById(101L)).thenReturn(null);
@@ -49,9 +51,12 @@ public class ProjectServiceTest {
         when(projectDao.findById(2L)).thenReturn(createDummyProjectWithoutUser());
     }
 
-    @Test(expected = RuntimeException.class)
-    public void whenProjectNotFoundThenThrowException() {
-        projectService.findById(101L);
+    @Test
+    public void whenProjectNotFoundThenThrowException() throws WebApplicationException {
+        assertThrows(WebApplicationException.class,
+                () ->
+                        projectService.findById(101L)
+        );
     }
 
     @Test
@@ -72,10 +77,14 @@ public class ProjectServiceTest {
         assertTrue(projectUpdatedCaptor.getValue().getUsers().isEmpty());
     }
 
-    @Test(expected = RuntimeException.class)
-    public void whenNotAssignedUserRemovedThenFail() {
-        Project project = projectService.findById(2L);
-        projectService.removeUser(project.getProjectId(), createDummyUser().getUserId());
+    @Test
+    public void whenNotAssignedUserRemovedThenFail() throws WebApplicationException {
+        assertThrows(WebApplicationException.class,
+                () -> {
+                    Project project = projectService.findById(2L);
+                    projectService.removeUser(project.getProjectId(), createDummyUser().getUserId());
+                }
+        );
     }
 
     @Test
@@ -89,9 +98,13 @@ public class ProjectServiceTest {
         assertFalse(projectUpdatedCaptor.getValue().getUsers().isEmpty());
     }
 
-    @Test(expected = RuntimeException.class)
-    public void whenInactiveUserAssignedThenFail() {
-        projectService.assignUser(2L, 3L);
+    @Test
+    public void whenInactiveUserAssignedThenFail() throws WebApplicationException{
+        assertThrows(WebApplicationException.class,
+                () -> {
+                    projectService.assignUser(2L, 3L);
+                }
+        );
     }
 
     private Project createDummyProjectWithUser(User user) {
