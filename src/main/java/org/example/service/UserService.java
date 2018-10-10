@@ -28,7 +28,7 @@ public class UserService {
     public User findById(Long id) {
         User user = userDao.findById(id);
         if (user == null) {
-            throw new WebApplicationException("User with id " + id + " not found!", Response.Status.NOT_FOUND);
+            throw new WebApplicationException("User with id = " + id + " not found!", Response.Status.NOT_FOUND);
         }
         return user;
     }
@@ -53,7 +53,7 @@ public class UserService {
             throw new WebApplicationException("Provided id is not the same as updated user id!", Response.Status.CONFLICT);
         }
         if (userDao.findById(id) == null) {
-            throw new WebApplicationException("User with id " + id + " not found!", Response.Status.NOT_FOUND);
+            throw new WebApplicationException("User with id = " + id + " not found!", Response.Status.NOT_FOUND);
         }
         try {
             return userDao.update(user);

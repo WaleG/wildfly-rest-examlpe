@@ -34,7 +34,7 @@ public class ProjectService {
     public Project findById(Long id) {
         Project project = projectDao.findById(id);
         if (project == null) {
-            throw new WebApplicationException("Project with id " + id + " not found!", Response.Status.NOT_FOUND);
+            throw new WebApplicationException("Project with id = " + id + " not found!", Response.Status.NOT_FOUND);
         }
         return project;
     }

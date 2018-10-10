@@ -12,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,11 +42,13 @@ public class UserServiceTest {
 
     @Test
     public void whenUserNotFoundThenThrowException() throws WebApplicationException{
-        assertThrows(WebApplicationException.class,
+        WebApplicationException exception = assertThrows(WebApplicationException.class,
                 () -> {
                     userService.findById(101L);
                 }
         );
+        assertEquals("User with id = 101 not found!", exception.getMessage());
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), exception.getResponse().getStatus());
     }
 
     @Test
@@ -68,12 +71,14 @@ public class UserServiceTest {
 
     @Test
     public void whenUserUpdatedByAnotherUserIdThenFail() throws WebApplicationException{
-        assertThrows(WebApplicationException.class,
+        WebApplicationException exception = assertThrows(WebApplicationException.class,
                 () -> {
                     User user = createDummyUser2();
                     userService.update(1L, user);
                 }
         );
+        assertEquals("Provided id is not the same as updated user id!", exception.getMessage());
+        assertEquals(Response.Status.CONFLICT.getStatusCode(), exception.getResponse().getStatus());
     }
 
     private User createDummyUser() {

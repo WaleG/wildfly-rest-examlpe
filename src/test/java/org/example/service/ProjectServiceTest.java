@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -53,10 +54,12 @@ public class ProjectServiceTest {
 
     @Test
     public void whenProjectNotFoundThenThrowException() throws WebApplicationException {
-        assertThrows(WebApplicationException.class,
+        WebApplicationException exception = assertThrows(WebApplicationException.class,
                 () ->
                         projectService.findById(101L)
         );
+        assertEquals("Project with id = 101 not found!", exception.getMessage());
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), exception.getResponse().getStatus());
     }
 
     @Test
@@ -79,12 +82,14 @@ public class ProjectServiceTest {
 
     @Test
     public void whenNotAssignedUserRemovedThenFail() throws WebApplicationException {
-        assertThrows(WebApplicationException.class,
+        WebApplicationException exception = assertThrows(WebApplicationException.class,
                 () -> {
                     Project project = projectService.findById(2L);
                     projectService.removeUser(project.getProjectId(), createDummyUser().getUserId());
                 }
         );
+        assertEquals("Cannot remove unassigned user from project!", exception.getMessage());
+        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), exception.getResponse().getStatus());
     }
 
     @Test
@@ -100,11 +105,13 @@ public class ProjectServiceTest {
 
     @Test
     public void whenInactiveUserAssignedThenFail() throws WebApplicationException{
-        assertThrows(WebApplicationException.class,
+        WebApplicationException exception = assertThrows(WebApplicationException.class,
                 () -> {
                     projectService.assignUser(2L, 3L);
                 }
         );
+        assertEquals("Only active users can be assigned!", exception.getMessage());
+        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), exception.getResponse().getStatus());
     }
 
     private Project createDummyProjectWithUser(User user) {
