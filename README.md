@@ -1,4 +1,4 @@
-# User and Project management application
+# Test rest api application
 
 Test application for projects and users management
 
